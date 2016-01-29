@@ -5,6 +5,6 @@ package DataSchema;
  */
 public class Channel {
     public Geofence geofence;
-    public int adminID;
+    public User admin;
     public int channelID;
 }
