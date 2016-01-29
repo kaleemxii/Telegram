@@ -3,6 +3,7 @@
 
 
 <resources>
+    <string name="google_app_id">123456789012</string>
     <string name="AppName">Telegram</string>
     <string name="AppNameBeta">Telegram Beta</string>
     <string name="LanguageName">English</string>
