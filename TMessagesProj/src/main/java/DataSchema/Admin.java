@@ -1,9 +1,9 @@
 package DataSchema;
 
 /**
- * Created by shverm on 1/29/2016.
+ * Created by gaukumar on 30-01-2016.
  */
-public class User {
+public class Admin {
     private String userId;
 
     private String userTag;

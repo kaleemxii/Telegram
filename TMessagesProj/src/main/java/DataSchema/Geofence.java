@@ -4,15 +4,38 @@ package DataSchema;
  * Created by shverm on 1/29/2016.
  */
 public class Geofence {
-    public GeoCordinates leftBottom;
-    public GeoCordinates rightBottom;
-    public GeoCordinates leftTop;
-    public GeoCordinates rightTop;
+    private String[] constant;
 
-    public Geofence(GeoCordinates leftBottom, GeoCordinates rightBottom, GeoCordinates leftTop, GeoCordinates rightTop) {
-        this.leftBottom = leftBottom;
-        this.rightBottom = rightBottom;
-        this.leftTop = leftTop;
-        this.rightTop = rightTop;
+    private String[] multiple;
+
+    private Coordinates[] coordinates;
+
+    public String[] getConstant() {
+        return constant;
+    }
+
+    public void setConstant(String[] constant) {
+        this.constant = constant;
+    }
+
+    public String[] getMultiple() {
+        return multiple;
+    }
+
+    public void setMultiple(String[] multiple) {
+        this.multiple = multiple;
+    }
+
+    public Coordinates[] getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Coordinates[] coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    @Override
+    public String toString() {
+        return "ChannelInfo [constant = " + constant + ", multiple = " + multiple + ", coordinates = " + coordinates + "]";
     }
 }
