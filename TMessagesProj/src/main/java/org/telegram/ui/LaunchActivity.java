@@ -21,12 +21,14 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Browser;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -43,6 +45,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.ChatObject;
@@ -76,6 +80,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
+
+import DataSchema.Greeting;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, DialogsActivity.MessagesActivityDelegate {
 
@@ -2101,4 +2107,32 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         }
         drawerLayoutAdapter.notifyDataSetChanged();
     }
+
+
+    private class HttpRequestTask extends AsyncTask<Void, Void, Greeting> {
+        @Override
+        protected Greeting doInBackground(Void... params) {
+            try {
+                final String url = "http://rest-service.guides.spring.io/greeting";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                Greeting greeting = restTemplate.getForObject(url, Greeting.class);
+                return greeting;
+            } catch (Exception e) {
+                Log.e("Http error", e.getMessage(), e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Greeting greeting) {
+            Log.i("botcha", String.format("value of greeting id: %s", greeting.getId()));
+            Log.i("botcha", String.format("value of greeting content: %s", greeting.getContent()));
+
+            // to display in text views, just make them and put the info in them
+        }
+
+    }
+
 }
