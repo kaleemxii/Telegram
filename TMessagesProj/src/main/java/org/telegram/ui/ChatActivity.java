@@ -32,6 +32,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
@@ -1964,6 +1965,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (mentionsAdapter != null) {
                     mentionsAdapter.addHashtagsFromMessage(message);
                 }
+                Log.i("botcha sent messages", String.format("the message on messge send: %S", message));
             }
 
             @Override

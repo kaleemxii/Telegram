@@ -30,6 +30,7 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
+import android.util.Log;
 import android.util.SparseArray;
 
 import org.telegram.tgnet.ConnectionsManager;
@@ -419,6 +420,7 @@ public class NotificationsController {
         if (messageObjects.isEmpty()) {
             return;
         }
+
         final ArrayList<MessageObject> popupArray = new ArrayList<>(popupMessages);
         notificationsQueue.postRunnable(new Runnable() {
             @Override
@@ -432,6 +434,7 @@ public class NotificationsController {
 
                 for (int a = 0; a < messageObjects.size(); a++) {
                     MessageObject messageObject = messageObjects.get(a);
+                    Log.i("Botcha messages received:", messageObject.messageText.toString());
                     long mid = messageObject.messageOwner.id;
                     if (messageObject.messageOwner.to_id.channel_id != 0) {
                         mid |= ((long) messageObject.messageOwner.to_id.channel_id) << 32;
