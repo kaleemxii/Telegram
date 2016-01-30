@@ -23,6 +23,14 @@ public class Geofence {
         precalc_values();
     }
 
+    public List<GeoCoordinates> getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(List<GeoCoordinates> coordinates) {
+        this.coordinates = coordinates;
+    }
+
     private void precalc_values() {
 
         constant = new double[coordinates.size()];

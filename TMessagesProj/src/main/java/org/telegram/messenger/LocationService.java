@@ -17,8 +17,10 @@ import android.widget.Toast;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import DataSchema.ServerResponseData;
+import java.util.ArrayList;
+import java.util.List;
 
+import DataSchema.Channel;
 /**
  * Created by gaukumar on 30-01-2016.
  */
@@ -143,8 +145,9 @@ public class LocationService extends Service {
                 int userId = UserConfig.getClientUserId();
                 restApiUrl = "http://botchaapis.appspot.com/getchannels?userId=2&lat=17.429549&long=78.3411581";
                 //"http://botchaapis.appspot.com/getchannels?userId=1&lat="+loc.getLatitude()+"&long="+loc.getLongitude();
-//                final AsyncTask<Void, Void, ServerResponseData> execute;
-//                execute = new HttpRequestTask().execute();
+                final AsyncTask<Void, Void, List<Channel>> execute;
+                execute = new HttpRequestTask().execute();
+
                 intent.putExtra("Latitude", loc.getLatitude());
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
@@ -170,15 +173,15 @@ public class LocationService extends Service {
 
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, ServerResponseData> {
+    private class HttpRequestTask extends AsyncTask<Void, Void, List<Channel>> {
         @Override
-        protected ServerResponseData doInBackground(Void... params) {
+        protected List<Channel> doInBackground(Void... params) {
             try {
                 final String url = restApiUrl;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                ServerResponseData greeting = restTemplate.getForObject(url, ServerResponseData.class);
-                return greeting;
+                List<Channel> channles = restTemplate.getForObject(url, ArrayList.class);
+                return channles;
             } catch (Exception e) {
                 Log.e("Http error", e.getMessage(), e);
             }
@@ -187,8 +190,8 @@ public class LocationService extends Service {
         }
 
         @Override
-        protected void onPostExecute(ServerResponseData greeting) {
-            Toast.makeText(getApplicationContext(), "Id: " + greeting.getChannels()[0].getAdmin(), Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(List<Channel> channels) {
+            Toast.makeText(getApplicationContext(), "Id: " + channels.get(0).getAdmin(), Toast.LENGTH_SHORT).show();
         }
 
     }

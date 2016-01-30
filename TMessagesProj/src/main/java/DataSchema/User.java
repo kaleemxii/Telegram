@@ -4,16 +4,12 @@ package DataSchema;
  * Created by shverm on 1/29/2016.
  */
 public class User {
-    private String userId;
+    public int userId;
+    public String userTag;
 
-    private String userTag;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
+    public User(int userId, String userTag) {
         this.userId = userId;
+        this.userTag = userTag;
     }
 
     public String getUserTag() {
@@ -24,8 +20,11 @@ public class User {
         this.userTag = userTag;
     }
 
-    @Override
-    public String toString() {
-        return "ChannelInfo [userId = " + userId + ", userTag = " + userTag + "]";
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
