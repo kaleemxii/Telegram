@@ -12,6 +12,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +41,7 @@ import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.LaunchActivity;
 import org.telegram.ui.PopupNotificationActivity;
+import org.telegram.ui.TelegramMessageWidget;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,6 +84,13 @@ public class NotificationsController {
     private boolean soundInLoaded;
     private boolean soundOutLoaded;
     private AlarmManager alarmManager;
+    public WidgetUpdateDelegate widgetUpdateDelegate = null;
+    public Context context = null;
+    public int[] appWidgetIds = null;
+
+    public interface WidgetUpdateDelegate {
+        public void updateWidget(Context context, int[] appWidgetIds);
+    }
 
     public NotificationsController() {
         notificationManager = NotificationManagerCompat.from(ApplicationLoader.applicationContext);
@@ -136,6 +146,14 @@ public class NotificationsController {
             }
         }
         return localInstance;
+    }
+
+    public void setUpdateWidgetDelegate(Context context, WidgetUpdateDelegate widgetDelegate, int[] appWidgetIds) {
+        if (appWidgetIds != null) {
+            this.context = context;
+            this.widgetUpdateDelegate = widgetDelegate;
+            this.appWidgetIds = appWidgetIds;
+        }
     }
 
     private static String getLauncherClassName(Context context) {
@@ -420,6 +438,8 @@ public class NotificationsController {
         if (messageObjects.isEmpty()) {
             return;
         }
+
+        updateMyWidget();
 
         final ArrayList<MessageObject> popupArray = new ArrayList<>(popupMessages);
         notificationsQueue.postRunnable(new Runnable() {
@@ -1127,8 +1147,17 @@ public class NotificationsController {
 
     private void showOrUpdateNotification(boolean notifyAboutLast) {
         showOrUpdateNotification(notifyAboutLast, false, "Join", "Cancel");
-
+//        if (notifyAboutLast == true)
+//            updateMyWidget();
         //place to add update call to load new messages
+    }
+
+    private void updateMyWidget() {
+        //AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ApplicationLoader.applicationContext);
+        //ComponentName componentName = new ComponentName(ApplicationLoader.applicationContext, TelegramMessageWidget.class);
+        //appWidgetManager.updateAppWidget(componentName, );
+        if (widgetUpdateDelegate != null && appWidgetIds != null)
+            widgetUpdateDelegate.updateWidget(context, appWidgetIds);
     }
 
     private void showOrUpdateNotification(boolean notifyAboutLast, boolean isButtonRequired, String leftBtnName, String rightBtnName) {
