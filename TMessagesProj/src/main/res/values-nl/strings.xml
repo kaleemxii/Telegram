@@ -1042,4 +1042,5 @@
     <!--update text-->
     <string name="updateText">Telegram voor Android is bijgewerkt. Nieuw in versie 3.4.0:\n\nGIF-revolutie: 20 keer zo snel GIF\'s sturen en downloaden. Speel ze automatisch af en sla je favorieten op in het stickerpaneel.\n\nmeer over GIFs:\nhttps://telegram.org/blog/gif-revolution\n\nInline-bots: Voeg botcontent toe aan chats op een nieuwe manier! Geef in het invoerveld de naam van een bot en je commando in en stuur de resultaten naar je chatpartner. Probeer het eens met “@gif dog”. Voorbeelden: @gif, @wiki, @bing, @vid, @bold.\n\nMeer over inline-bots:\nhttps://telegram.org/blog/inline-bots</string>
     <string name="updateBuild">704</string>
+    <string name="AskBot">AskBot</string>
 </resources>

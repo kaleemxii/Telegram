@@ -1042,4 +1042,5 @@
     <!--update text-->
     <string name="updateText">Telegram für Android wurde aktualisiert. Neu in Version 3.4.0:\n\nGIF-Revolution: GIFs bis zu 20x schneller senden und empfangen, GIF-Autoplay und GIF-Speicherung im Sticker-Panel.\n\nMehr über die neuen GIFs:\nhttps://telegram.org/blog/gif-revolution\n\nInline-Bots: Binde Inhalte der neuen Inline-Bots in alle Chats noch einfacher ein. Probiere mal "@gif dog" im Texteingabefeld aus. Beispiel-Bots: @gif, @wiki, @bing @vid und @bold.\n\nInfos zu Inline-Bots\nhttps://telegram.org/blog/inline-bots</string>
     <string name="updateBuild">704</string>
+    <string name="AskBot">AskBot</string>
 </resources>

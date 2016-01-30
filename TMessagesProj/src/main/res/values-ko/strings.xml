@@ -1042,4 +1042,5 @@
     <!--update text-->
     <string name="updateText">텔레그램 안드로이드 버전이 업데이트 되었습니다. 새로운 버전은 3.4.0 입니다:\n\nGIF 혁명: 10배 빠른 전송, 다운로드 및 자동재생이 가능하며, 스티커 패널에서 즐겨찾는 GIF를 저장가능\n\nGIF에 대한 자세한 정보:\nhttps://telegram.org/blog/gif-revolution\n\n@-봇 : 모든 대화에 봇 기능을 추가 할 수 있습니다. 봇 아이디를 입력란에 같이 입력해주시면 즉시 결과값을 확인 할 수 있습니다."@gif dog"와 같은 명령어를 입력란에 같이 입력해보세요. 예시:@gif, @wiki, @bing, @vid, @bold.\n\n@-봇에 대한 자세한 정보\nhttps://telegram.org/blog/inline-bots</string>
     <string name="updateBuild">704</string>
+    <string name="AskBot">AskBot</string>
 </resources>

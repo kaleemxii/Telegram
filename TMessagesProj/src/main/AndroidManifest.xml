@@ -181,6 +181,9 @@
             </intent-filter>
         </service>
 
+        <service android:name=".WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
         <service android:name=".NotificationsService" android:enabled="true"/>
         <service android:name=".NotificationRepeat" android:exported="false"/>
         <service android:name=".ClearCacheService" android:exported="false"/>
@@ -197,6 +200,16 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.telegram.ui.TelegramMessageWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/telegram_message_widget_info" />
         </receiver>
 
         <receiver android:name=".AppStartReceiver" android:enabled="true">

@@ -1042,4 +1042,5 @@
     <!--update text-->
     <string name="updateText">O Telegram para Android foi atualizado. Novidades da versão 3.4.0:\n\nRevolução do GIF: baixe e envie 20x mais rápido, reprodução automática, salve seus GIFs favoritos numa aba dedicada no painel de stickers.\n\nMais sobre GIFs:\nhttps://telegram.org/blog/gif-revolution\n\nBots integrados: Novo modo de inserir conteúdo de bots numa conversa. Digite o nome de usuário do bot e um comando na mensagem e envie o resultado na conversa. Tente usar "@gif gato" na conversa. Ex. de bots: @gif, @wiki, @bing, @vid, @bold.\n\nMais sobre bots integrados:\nhttps://telegram.org/blog/inline-bots</string>
     <string name="updateBuild">704</string>
+    <string name="AskBot">AskBot</string>
 </resources>

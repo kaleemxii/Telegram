@@ -1042,4 +1042,5 @@
     <!--update text-->
     <string name="updateText">Telegram per Android si è aggiornato. Nuovo nella versione 3.4.0:\n\nRivoluzione GIF: Invio e download 20 volte più veloci, autoriproduci e salva le tue preferite nel pannello sticker.\n\nPiù info sulle GIF:\nhttps://telegram.org/blog/gif-revolution\n\nBot Inline: Un nuovo modo di aggiungere contenuti in ogni chat. Menziona un bot e la tua domanda nel campo di scrittura e ottieni risultati immediati. Prova a scrivere “@gif dog” nella tua prossima chat. Bot di esempio: @gif, @wiki, @bing, @vid, @bold\n\nPiù info sui Bot Inline:\nhttps://telegram.org/blog/inline-bots</string>
     <string name="updateBuild">704</string>
+    <string name="AskBot">AskBot</string>
 </resources>

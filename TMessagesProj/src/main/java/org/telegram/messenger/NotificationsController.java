@@ -1127,6 +1127,8 @@ public class NotificationsController {
 
     private void showOrUpdateNotification(boolean notifyAboutLast) {
         showOrUpdateNotification(notifyAboutLast, false, "Join", "Cancel");
+
+        //place to add update call to load new messages
     }
 
     private void showOrUpdateNotification(boolean notifyAboutLast, boolean isButtonRequired, String leftBtnName, String rightBtnName) {
