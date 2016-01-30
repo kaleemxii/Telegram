@@ -37,6 +37,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".ApplicationLoader"
@@ -153,6 +155,11 @@
             </intent-filter>
             <meta-data android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/auth"/>
+        </service>
+
+        <service
+            android:name=".LocationService"
+            android:exported="true">
         </service>
 
         <service android:name=".ContactsSyncAdapterService" android:exported="true">

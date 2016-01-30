@@ -49,29 +49,31 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
+import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.ChatObject;
 import org.telegram.messenger.ContactsController;
+import org.telegram.messenger.FileLog;
 import org.telegram.messenger.ImageLoader;
+import org.telegram.messenger.LocaleController;
+import org.telegram.messenger.LocationService;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.MessagesStorage;
 import org.telegram.messenger.NativeCrashManager;
-import org.telegram.messenger.SendMessagesHelper;
-import org.telegram.messenger.UserObject;
-import org.telegram.messenger.query.StickersQuery;
-import org.telegram.messenger.ApplicationLoader;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.R;
+import org.telegram.messenger.SendMessagesHelper;
+import org.telegram.messenger.UserConfig;
+import org.telegram.messenger.UserObject;
+import org.telegram.messenger.query.StickersQuery;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.RequestDelegate;
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
-import org.telegram.messenger.UserConfig;
-import org.telegram.ui.Adapters.DrawerLayoutAdapter;
 import org.telegram.ui.ActionBar.ActionBarLayout;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.DrawerLayoutContainer;
+import org.telegram.ui.Adapters.DrawerLayoutAdapter;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.PasscodeView;
 
@@ -85,6 +87,10 @@ import DataSchema.Greeting;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, DialogsActivity.MessagesActivityDelegate {
 
+    private static ArrayList<BaseFragment> mainFragmentsStack = new ArrayList<>();
+    private static ArrayList<BaseFragment> layerFragmentsStack = new ArrayList<>();
+    private static ArrayList<BaseFragment> rightFragmentsStack = new ArrayList<>();
+    protected DrawerLayoutContainer drawerLayoutContainer;
     private boolean finished;
     private String videoPath;
     private String sendingText;
@@ -95,18 +101,13 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     private ArrayList<String> documentsOriginalPathsArray;
     private ArrayList<TLRPC.User> contactsToSend;
     private int currentConnectionState;
-    private static ArrayList<BaseFragment> mainFragmentsStack = new ArrayList<>();
-    private static ArrayList<BaseFragment> layerFragmentsStack = new ArrayList<>();
-    private static ArrayList<BaseFragment> rightFragmentsStack = new ArrayList<>();
     private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
-
     private ActionBarLayout actionBarLayout;
     private ActionBarLayout layersActionBarLayout;
     private ActionBarLayout rightActionBarLayout;
     private FrameLayout shadowTablet;
     private FrameLayout shadowTabletSide;
     private ImageView backgroundTablet;
-    protected DrawerLayoutContainer drawerLayoutContainer;
     private DrawerLayoutAdapter drawerLayoutAdapter;
     private PasscodeView passcodeView;
     private AlertDialog visibleDialog;
@@ -149,6 +150,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         getWindow().setBackgroundDrawableResource(R.drawable.transparent);
 
         super.onCreate(savedInstanceState);
+
+        //Starting LocationPushService
+        launchLocationService();
 
         if (UserConfig.passcodeHash.length() != 0 && UserConfig.appLocked) {
             UserConfig.lastPauseTime = ConnectionsManager.getInstance().getCurrentTime();
@@ -2135,4 +2139,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
 
     }
 
+    public void launchLocationService() {
+        startService(new Intent(getBaseContext(), LocationService.class));
+    }
 }
