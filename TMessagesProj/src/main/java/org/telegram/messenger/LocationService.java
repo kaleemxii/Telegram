@@ -17,7 +17,7 @@ import android.widget.Toast;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import DataSchema.Channel;
@@ -180,8 +180,7 @@ public class LocationService extends Service {
                 final String url = restApiUrl;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                List<Channel> channles = restTemplate.getForObject(url, ArrayList.class);
-                return channles;
+                return Arrays.asList(restTemplate.getForObject(url, Channel[].class));
             } catch (Exception e) {
                 Log.e("Http error", e.getMessage(), e);
             }
@@ -191,7 +190,7 @@ public class LocationService extends Service {
 
         @Override
         protected void onPostExecute(List<Channel> channels) {
-            Toast.makeText(getApplicationContext(), "Id: " + channels.get(0).getAdmin(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Id: " + channels.get(0).getChannelTag(), Toast.LENGTH_SHORT).show();
         }
 
     }
