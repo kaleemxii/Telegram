@@ -634,7 +634,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         floatingButton = new ImageView(context);
         floatingButton.setVisibility(onlySelect ? View.GONE : View.VISIBLE);
         floatingButton.setScaleType(ImageView.ScaleType.CENTER);
-        floatingButton.setBackgroundResource(R.drawable.floating_button_drawable);
+        floatingButton.setBackgroundResource(R.drawable.floating_m);
         floatingButton.setImageResource(R.drawable.botcha);
         floatingButton.setPadding(5,5,5,5);
         if (Build.VERSION.SDK_INT >= 21) {

@@ -86,14 +86,7 @@ public class NotificationsController {
     private boolean soundInLoaded;
     private boolean soundOutLoaded;
     private AlarmManager alarmManager;
-    public WidgetUpdateDelegate widgetUpdateDelegate = null;
-    public Context context = null;
-    public int[] appWidgetIds = null;
-    public AppWidgetManager appWidgetManager;
 
-    public interface WidgetUpdateDelegate {
-        public void updateWidget(Context context, int[] appWidgetIds, AppWidgetManager appWidgetManager);
-    }
 
     public NotificationsController() {
         notificationManager = NotificationManagerCompat.from(ApplicationLoader.applicationContext);
@@ -151,14 +144,6 @@ public class NotificationsController {
         return localInstance;
     }
 
-    public void setUpdateWidgetDelegate(Context context, WidgetUpdateDelegate widgetDelegate, int[] appWidgetIds, AppWidgetManager appWidgetManager) {
-        if (appWidgetIds != null) {
-            this.context = context;
-            this.widgetUpdateDelegate = widgetDelegate;
-            this.appWidgetIds = appWidgetIds;
-            this.appWidgetManager = appWidgetManager;
-        }
-    }
 
     private static String getLauncherClassName(Context context) {
         try {
@@ -1165,11 +1150,9 @@ public class NotificationsController {
     }
 
     private void updateMyWidget() {
-        //AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ApplicationLoader.applicationContext);
-        //ComponentName componentName = new ComponentName(ApplicationLoader.applicationContext, TelegramMessageWidget.class);
-        //appWidgetManager.updateAppWidget(componentName, );
-        if (widgetUpdateDelegate != null && appWidgetIds != null)
-            widgetUpdateDelegate.updateWidget(context, appWidgetIds, appWidgetManager);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ApplicationLoader.applicationContext);
+        TelegramMessageWidget.updateWidget(ApplicationLoader.applicationContext, appWidgetManager);
+
     }
 
     private void showOrUpdateNotification(boolean notifyAboutLast, boolean isButtonRequired, String leftBtnName, String rightBtnName) {
