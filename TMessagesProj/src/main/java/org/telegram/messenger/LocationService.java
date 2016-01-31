@@ -190,6 +190,8 @@ public class LocationService extends Service {
 
         @Override
         protected void onPostExecute(List<Channel> channels) {
+            if (channels == null || channels.size() == 0)
+                return;
             Toast.makeText(getApplicationContext(), "Id: " + channels.get(0).getChannelTag(), Toast.LENGTH_SHORT).show();
         }
 

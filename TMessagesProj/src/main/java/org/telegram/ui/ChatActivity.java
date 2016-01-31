@@ -373,6 +373,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
         if (chatId != 0) {
             currentChat = MessagesController.getInstance().getChat(chatId);
+            Log.i("Bocha creating currentChat", "current chat");
             if (currentChat == null) {
                 final Semaphore semaphore = new Semaphore(0);
                 MessagesStorage.getInstance().getStorageQueue().postRunnable(new Runnable() {
@@ -1966,6 +1967,18 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     mentionsAdapter.addHashtagsFromMessage(message);
                 }
                 Log.i("botcha sent messages", String.format("the message on messge send: %S", message));
+                int userID = UserConfig.getClientUserId();
+                Log.i("botcha id", Integer.toString(userID));
+                Log.i("botcha message", message);
+                if (currentChat == null) {
+                    Log.i("botcha null current chat", "current chat null");
+
+                } else {
+                    Log.i("botcha id", String.format("id: %d", currentChat.id));
+                    BotchaHelper.Helpers.interceptSentMessage(userID, message, Integer.toString(currentChat.id));
+                }
+
+
             }
 
             @Override
