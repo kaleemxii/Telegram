@@ -102,6 +102,18 @@ public class Helpers {
         //return id == 135483832 || id == 171135579 || id == 149007104 || id == 192493113 || id == 175641240;
     }
 
+    public static boolean isChannelRegistered(long channelID) {
+        List<Long> allowedIDs = getAllowedIDs();
+        boolean flag1 = false;
+        for(int i = 0; i <allowedIDs.size(); i++) {
+            if (channelID == allowedIDs.get(i)) {
+                flag1 = true;
+            }
+        }
+
+        return flag1;
+    }
+
     public static List<Long> getAllowedIDs() {
         List<Long> returnList = new ArrayList<Long>();
         /*
