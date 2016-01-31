@@ -533,7 +533,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                     Helpers.removeFromRegisteredChannels(channelIds[i]);
                                 }
                             }
-                            Intent intent = getIntent();
+                            Intent intent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
+                            ;
                             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             finish();
                             startActivity(intent);
