@@ -70,7 +70,7 @@ public class LocationService extends Service {
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 5, listener);
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 5, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 5, listener);
     }
 
     @Override
