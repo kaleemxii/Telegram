@@ -89,9 +89,10 @@ public class NotificationsController {
     public WidgetUpdateDelegate widgetUpdateDelegate = null;
     public Context context = null;
     public int[] appWidgetIds = null;
+    public AppWidgetManager appWidgetManager;
 
     public interface WidgetUpdateDelegate {
-        public void updateWidget(Context context, int[] appWidgetIds);
+        public void updateWidget(Context context, int[] appWidgetIds, AppWidgetManager appWidgetManager);
     }
 
     public NotificationsController() {
@@ -150,11 +151,12 @@ public class NotificationsController {
         return localInstance;
     }
 
-    public void setUpdateWidgetDelegate(Context context, WidgetUpdateDelegate widgetDelegate, int[] appWidgetIds) {
+    public void setUpdateWidgetDelegate(Context context, WidgetUpdateDelegate widgetDelegate, int[] appWidgetIds, AppWidgetManager appWidgetManager) {
         if (appWidgetIds != null) {
             this.context = context;
             this.widgetUpdateDelegate = widgetDelegate;
             this.appWidgetIds = appWidgetIds;
+            this.appWidgetManager = appWidgetManager;
         }
     }
 
@@ -1167,7 +1169,7 @@ public class NotificationsController {
         //ComponentName componentName = new ComponentName(ApplicationLoader.applicationContext, TelegramMessageWidget.class);
         //appWidgetManager.updateAppWidget(componentName, );
         if (widgetUpdateDelegate != null && appWidgetIds != null)
-            widgetUpdateDelegate.updateWidget(context, appWidgetIds);
+            widgetUpdateDelegate.updateWidget(context, appWidgetIds, appWidgetManager);
     }
 
     private void showOrUpdateNotification(boolean notifyAboutLast, boolean isButtonRequired, String leftBtnName, String rightBtnName) {

@@ -1,6 +1,7 @@
 package org.telegram.ui;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -22,7 +23,7 @@ public class TelegramMessageWidget extends AppWidgetProvider implements Notifica
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         if (NotificationsController.getInstance().widgetUpdateDelegate == null) {
-            NotificationsController.getInstance().setUpdateWidgetDelegate(context,this, appWidgetIds);
+            NotificationsController.getInstance().setUpdateWidgetDelegate(context,this, appWidgetIds,appWidgetManager);
         }
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
@@ -59,6 +60,10 @@ public class TelegramMessageWidget extends AppWidgetProvider implements Notifica
         svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
+        Intent intent  = new Intent(context, LaunchActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        views.setPendingIntentTemplate(R.id.widgetListView, contentIntent);
         views.setRemoteAdapter(R.id.widgetListView, svcIntent);
 
         // Instruct the widget manager to update the widget
@@ -66,8 +71,8 @@ public class TelegramMessageWidget extends AppWidgetProvider implements Notifica
     }
 
     @Override
-    public void updateWidget(Context context, int[] appWidgetIds) {
-        this.onUpdate(context, AppWidgetManager.getInstance(context), appWidgetIds);
+    public void updateWidget(Context context, int[] appWidgetIds, AppWidgetManager appWidgetManager) {
+        this.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 }
 

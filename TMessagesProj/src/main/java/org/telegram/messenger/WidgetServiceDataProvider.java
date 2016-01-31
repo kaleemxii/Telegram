@@ -2,6 +2,7 @@ package org.telegram.messenger;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -61,9 +62,9 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
         RemoteViews remoteView = new RemoteViews(packageName, android.R.layout.two_line_list_item);
         TLRPC.Dialog currentDialog = getDialogs().get(position);
         int lowerId = (int)currentDialog.id;
-        Intent intent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
-        intent.setAction("com.tmessages.openchat" + Math.random() + Integer.MAX_VALUE);
-        intent.setFlags(32768);
+        Intent fillIntent = new Intent();
+        fillIntent.setAction("com.tmessages.openchat" + Math.random() + Integer.MAX_VALUE);
+        fillIntent.setFlags(32768);
 
         if (lowerId < 0) {
             TLRPC.Chat chat = MessagesController.getInstance().getChat(-lowerId);
@@ -71,13 +72,13 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
             remoteView.setTextViewText(android.R.id.text1, chatName);
             MessageObject messageObject = MessagesController.getInstance().dialogMessage.get(-lowerId);
             //int chat_id = messageObject.messageOwner.to_id.chat_id != 0 ? messageObject.messageOwner.to_id.chat_id : messageObject.messageOwner.to_id.channel_id;
-            intent.putExtra("chatId", chat.id);
+            fillIntent.putExtra("chatId", chat.id);
         } else {
             TLRPC.User user = MessagesController.getInstance().getUser(lowerId);
             String userName = UserObject.getUserName(user);
             remoteView.setTextViewText(android.R.id.text1, userName);
             int user_id = user.id;
-            intent.putExtra("chatId", user_id);
+            fillIntent.putExtra("userId", user_id);
         }
 
         String message = MessagesController.getInstance().dialogMessage.get(currentDialog.id).messageText.toString();
@@ -87,7 +88,7 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
         //Toast.makeText(context, "why the hell this is not getting called"+position, Toast.LENGTH_SHORT).show();
         Log.d("WidgetUpdate", "times this is called " + position);
 
-        remoteView.setOnClickFillInIntent(android.R.id.text2, intent);
+       remoteView.setOnClickFillInIntent(android.R.id.text2, fillIntent);
 
         return remoteView;
     }
