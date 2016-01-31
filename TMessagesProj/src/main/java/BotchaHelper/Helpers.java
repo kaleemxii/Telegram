@@ -147,4 +147,15 @@ public class Helpers {
         editor.putString("allowedIDS2",result);
         editor.commit();
     }
+
+    public static void updateSharedPreference(List<Long> ids) {
+        SharedPreferences sharedPref = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", (Context.MODE_PRIVATE));
+        SharedPreferences.Editor editor = sharedPref.edit();
+        String result="";
+        for (int i= 0; i< ids.size(); i++) {
+            result = result + ids.toString() + ",";
+        }
+        editor.putString("allowedIDS2",result);
+        editor.commit();
+    }
 }
