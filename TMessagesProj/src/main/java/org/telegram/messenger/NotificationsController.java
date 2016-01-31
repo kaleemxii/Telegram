@@ -48,6 +48,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import BotchaHelper.Helpers;
+
 public class NotificationsController {
 
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
@@ -439,10 +441,13 @@ public class NotificationsController {
             return;
         }
 
-        boolean flag = false;
-        if (flag == false) {
-            Log.i("Botcha", "hiding the irrelevant messages");
-            return;
+        for (int i= messageObjects.size() - 1; i >= 0; i--) {
+            MessageObject messageObject = messageObjects.get(i);
+            long id = messageObject.getDialogId();
+            if (!Helpers.isChannelAllowed(id)) {
+                messageObjects.remove(i);
+                Log.i("Botcha", "hiding the irrelevant messages");
+            }
         }
 
         updateMyWidget();
