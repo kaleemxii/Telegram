@@ -1,5 +1,6 @@
 package org.telegram.messenger;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,17 +8,23 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.ui.LaunchActivity;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import DataSchema.Channel;
@@ -143,7 +150,8 @@ public class LocationService extends Service {
                 loc.getLatitude();
                 loc.getLongitude();
                 int userId = UserConfig.getClientUserId();
-                restApiUrl = "http://botchaapis.appspot.com/getchannels?userId=2&lat=17.429549&long=78.3411581";
+                String userTag = UserConfig.getCurrentUser().first_name;
+                restApiUrl = "http://botchaapis.appspot.com/getchannels?userId=186345694&userTag=gaurav&lat=17.429549&long=78.3411581";
                 //"http://botchaapis.appspot.com/getchannels?userId=1&lat="+loc.getLatitude()+"&long="+loc.getLongitude();
                 final AsyncTask<Void, Void, List<Channel>> execute;
                 execute = new HttpRequestTask().execute();
@@ -152,8 +160,38 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 Toast.makeText(getApplicationContext(), "Changed. UserId: " + userId + ", Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude(), Toast.LENGTH_SHORT).show();
+                showScreenNotification();
                 sendBroadcast(intent);
             }
+        }
+
+        public void showScreenNotification() {
+            HashMap<Integer, String> channelsAvailable = new HashMap<Integer, String>();
+            channelsAvailable.put(1, "StciHackathon");
+            channelsAvailable.put(2, "MSHydBuilding3");
+            channelsAvailable.put(3, "MSHyd");
+            NotificationCompat.Builder mBuilder;
+            Intent localIntent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
+            localIntent.setFlags(32768);
+            PendingIntent contentIntent = PendingIntent.getActivity(ApplicationLoader.applicationContext, 0, localIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder = new NotificationCompat.Builder(ApplicationLoader.applicationContext)
+                    .setContentTitle("New channels found")
+                    .setSmallIcon(R.drawable.notification)
+                    .setAutoCancel(true)
+                    .setNumber(1)
+                    .setContentIntent(contentIntent)
+                    .setGroup("messages")
+                    .setGroupSummary(true)
+                    .setColor(0xff2ca5e0);
+            mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+            mBuilder.setCategory(NotificationCompat.CATEGORY_MESSAGE);
+            mBuilder.setContentText("View new channels available at this location");
+            //mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("View new channels"));
+            mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, AudioManager.STREAM_NOTIFICATION);
+            //showExtraNotifications(mBuilder, true);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ApplicationLoader.applicationContext);
+            notificationManager.notify(1, mBuilder.build());
+            MessagesController.getInstance().isNewChannelsAvailable = true;
         }
 
         public void onProviderDisabled(String provider)

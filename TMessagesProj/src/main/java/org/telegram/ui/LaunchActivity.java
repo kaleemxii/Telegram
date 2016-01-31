@@ -47,7 +47,6 @@ import android.widget.Toast;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import org.telegram.messenger.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -475,6 +474,50 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                 }
             }
         });
+
+        if (MessagesController.getInstance().isNewChannelsAvailable == true) {
+
+            MessagesController.getInstance().isNewChannelsAvailable = false;
+            createChannelDialog();
+        }
+    }
+
+    public void createChannelDialog() {
+        final ArrayList<Integer> mSelectedItems = new ArrayList();  // Where we track the selected items
+        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+        // Set the dialog title
+        builder.setTitle("Channels")
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setMultiChoiceItems(new String[]{"Hackathon", "Microsoft"}, null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checked the item, add it to the selected items
+                                    mSelectedItems.add(which);
+                                } else if (mSelectedItems.contains(which)) {
+                                    // Else, if the item is already in the array, remove it
+                                    mSelectedItems.remove(Integer.valueOf(which));
+                                }
+                            }
+                        })
+                        // Set the action buttons
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        builder.create().show();
     }
 
     private void showPasscodeActivity() {
@@ -2112,6 +2155,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         drawerLayoutAdapter.notifyDataSetChanged();
     }
 
+    public void launchLocationService() {
+        startService(new Intent(getBaseContext(), LocationService.class));
+    }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, Greeting> {
         @Override
@@ -2137,9 +2183,5 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             // to display in text views, just make them and put the info in them
         }
 
-    }
-
-    public void launchLocationService() {
-        startService(new Intent(getBaseContext(), LocationService.class));
     }
 }
