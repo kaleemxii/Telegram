@@ -96,7 +96,7 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
     @Override
     public RemoteViews getLoadingView() {
         RemoteViews remoteViews = new RemoteViews(this.context.getPackageName(), android.R.layout.simple_list_item_1);
-        remoteViews.setTextViewText(android.R.id.text1, "LLLLLL");
+        remoteViews.setTextViewText(android.R.id.text1, "");
         return remoteViews;
     }
 
