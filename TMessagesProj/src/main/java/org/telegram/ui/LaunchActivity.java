@@ -80,6 +80,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import BotchaHelper.Helpers;
@@ -498,6 +499,11 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     mSelectedItems.add(i);
                 }
             }
+            List<Long> tempList = new ArrayList<Long>();//(channelIds.length);
+            for (int i = 0; i < channelIds.length; i++) {
+                tempList.add(channelIds[i]);
+            }
+            Helpers.updateGeoAllowedChannels(tempList);
             // Set the dialog title
             builder.setTitle("Channels Available")
                     // Specify the list array, the items to be selected by default (null for none),
@@ -533,7 +539,6 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                 }
                             }
                             Intent intent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
-                            ;
                             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             finish();
                             startActivity(intent);
