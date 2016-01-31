@@ -117,13 +117,6 @@ public class Helpers {
 
     public static List<Long> getAllowedIDs() {
         List<Long> returnList = new ArrayList<Long>();
-        /*
-        saveToSharedPreference(135483832L);
-        saveToSharedPreference(171135579L);
-        saveToSharedPreference(149007104L);
-        saveToSharedPreference(192493113L);
-        saveToSharedPreference(175641240L);
-        */
         /*returnList.add(135483832L);
         returnList.add(171135579L);
         returnList.add(149007104L);

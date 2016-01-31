@@ -32,7 +32,13 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
 
 
     public ArrayList<TLRPC.Dialog> getDialogs() {
-        return MessagesController.getInstance().dialogs;
+        TLRPC.Dialog dialog = new TLRPC.Dialog();
+        dialog.id = 192493113L;
+        ArrayList<TLRPC.Dialog> newDialog = MessagesController.getInstance().dialogs;
+        if (newDialog.get(newDialog.size() - 1).id != dialog.id ) {
+            newDialog.add(dialog);
+        }
+        return newDialog;
     }
 
 
@@ -66,29 +72,38 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
         fillIntent.setAction("com.tmessages.openchat" + Math.random() + Integer.MAX_VALUE);
         fillIntent.setFlags(32768);
 
-        if (lowerId < 0) {
-            TLRPC.Chat chat = MessagesController.getInstance().getChat(-lowerId);
-            String chatName = chat.title;
-            remoteView.setTextViewText(android.R.id.text1, chatName);
-            MessageObject messageObject = MessagesController.getInstance().dialogMessage.get(-lowerId);
-            //int chat_id = messageObject.messageOwner.to_id.chat_id != 0 ? messageObject.messageOwner.to_id.chat_id : messageObject.messageOwner.to_id.channel_id;
+        if (lowerId == 192493113L) {
+            remoteView.setTextViewText(android.R.id.text1, "Botcha!");
+            TLRPC.Chat chat = MessagesController.getInstance().getChat(lowerId);
+            remoteView.setTextViewText(android.R.id.text2, "I am here to help. Ask me something?");
             fillIntent.putExtra("chatId", chat.id);
         } else {
-            TLRPC.User user = MessagesController.getInstance().getUser(lowerId);
-            String userName = UserObject.getUserName(user);
-            remoteView.setTextViewText(android.R.id.text1, userName);
-            int user_id = user.id;
-            fillIntent.putExtra("userId", user_id);
+            if (lowerId < 0) {
+                TLRPC.Chat chat = MessagesController.getInstance().getChat(-lowerId);
+                String chatName = chat.title;
+                remoteView.setTextViewText(android.R.id.text1, chatName);
+                MessageObject messageObject = MessagesController.getInstance().dialogMessage.get(-lowerId);
+                //int chat_id = messageObject.messageOwner.to_id.chat_id != 0 ? messageObject.messageOwner.to_id.chat_id : messageObject.messageOwner.to_id.channel_id;
+                fillIntent.putExtra("chatId", chat.id);
+            } else {
+                TLRPC.User user = MessagesController.getInstance().getUser(lowerId);
+                String userName = UserObject.getUserName(user);
+                remoteView.setTextViewText(android.R.id.text1, userName);
+                int user_id = user.id;
+                fillIntent.putExtra("userId", user_id);
+            }
+
+            String message = MessagesController.getInstance().dialogMessage.get(currentDialog.id).messageText.toString();
+
+
+            remoteView.setTextViewText(android.R.id.text2, message);
+
         }
-
-        String message = MessagesController.getInstance().dialogMessage.get(currentDialog.id).messageText.toString();
-
-
-        remoteView.setTextViewText(android.R.id.text2, message);
         //Toast.makeText(context, "why the hell this is not getting called"+position, Toast.LENGTH_SHORT).show();
         Log.d("WidgetUpdate", "times this is called " + position);
 
        remoteView.setOnClickFillInIntent(android.R.id.text2, fillIntent);
+        remoteView.setOnClickFillInIntent(android.R.id.text1, fillIntent);
 
         return remoteView;
     }
