@@ -15,8 +15,9 @@ public class Helpers {
     public static void helloWorld() {
         String s = "hola";
     }
-    public static void interceptSentMessage(int userID, String message, String channelID) {
-        String url = "http://botchaapis.appspot.com/sendmessage?channelId=" + channelID + "&userId=" + userID + "&message=" + message;
+    public static void interceptSentMessage(int userID, String message, long channelID) {
+        String channelInfo = giveChannelWithToken(channelID);
+        String url = "http://botchaapis.appspot.com/sendmessage?channelId=" + channelInfo + "&userId=" + userID + "&message=" + message;
         Log.i("Botcha send message url", url);
         new HttpRequestTask().execute(url);
     }
@@ -47,5 +48,21 @@ public class Helpers {
         public void execute(String url) {
             this.urlToCall = url;
         }
+    }
+
+    private static String giveChannelWithToken(long id) {
+        if (id == 135483832) {
+            return "135483832:AAFMWMgaqIJbe0BAWjZcVxnIDKBAfrpLp9E";
+        } else if (id == 171135579) {
+            return "171135579:AAE4e1xWLomYb5wG3Bp69TVFue2I1fFeoVE";
+        } else if (id == 149007104) {
+            return "149007104:AAHtzMtfQIEhDVE5795Ip8JmTa4NY59R0pU";
+        } else if (id == 192493113) {
+            return "192493113:AAEd8UGh8sum7P02Np39m2cGhuFRyT7xkj4";
+        } else if (id == 175641240) {
+            return "175641240:AAGayLEwIXjVDI1qWTb6lRUucFSGtZOMWDQ";
+        }
+
+        return "Empty";
     }
 }
