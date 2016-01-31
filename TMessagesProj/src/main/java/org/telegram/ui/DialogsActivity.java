@@ -27,6 +27,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -190,6 +191,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             passcodeItem = menu.addItem(1, R.drawable.lock_close);
             updatePasscodeButton();
         }
+        /*
         final ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
             @Override
             public void onSearchExpand() {
@@ -267,7 +269,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             }
         });
-        item.getSearchField().setHint(LocaleController.getString("Search", R.string.Search));
+        */
+        //item.getSearchField().setHint(LocaleController.getString("Search", R.string.Search));
         if (onlySelect) {
             actionBar.setBackButtonImage(R.drawable.ic_ab_back);
             actionBar.setTitle(LocaleController.getString("SelectChat", R.string.SelectChat));
@@ -330,7 +333,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 RecyclerView.Adapter adapter = listView.getAdapter();
                 if (adapter == dialogsAdapter) {
                     TLRPC.Dialog dialog = dialogsAdapter.getItem(position);
-                    if (dialog == null) {
+                    if (dialog == null ) {
                         return;
                     }
                     dialog_id = dialog.id;
@@ -631,8 +634,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         floatingButton = new ImageView(context);
         floatingButton.setVisibility(onlySelect ? View.GONE : View.VISIBLE);
         floatingButton.setScaleType(ImageView.ScaleType.CENTER);
-        floatingButton.setBackgroundResource(R.drawable.floating_states);
-        floatingButton.setImageResource(R.drawable.floating_pencil);
+        floatingButton.setBackgroundResource(R.drawable.floating_button_drawable);
+        floatingButton.setImageResource(R.drawable.botcha);
+        floatingButton.setPadding(5,5,5,5);
         if (Build.VERSION.SDK_INT >= 21) {
             StateListAnimator animator = new StateListAnimator();
             animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(floatingButton, "translationZ", AndroidUtilities.dp(2), AndroidUtilities.dp(4)).setDuration(200));
@@ -651,8 +655,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                args.putBoolean("destroyAfterSelect", true);
-                presentFragment(new ContactsActivity(args));
+                args.putInt("user_id", 192493113);
+                presentFragment(new ChatActivity(args));
             }
         });
 

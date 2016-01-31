@@ -1,5 +1,6 @@
 package org.telegram.messenger;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,15 +8,20 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.ui.LaunchActivity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,8 +69,8 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 5, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 5, listener);
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 5, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 5, listener);
     }
 
     @Override
@@ -140,10 +146,13 @@ public class LocationService extends Service {
         {
 
             if(isBetterLocation(loc, previousBestLocation)) {
+                MessagesController.getInstance().isNewChannelsAvailable = false;
                 loc.getLatitude();
                 loc.getLongitude();
                 int userId = UserConfig.getClientUserId();
-                restApiUrl = "http://botchaapis.appspot.com/getchannels?userId=2&lat=17.429549&long=78.3411581";
+                String userTag = UserConfig.getCurrentUser().first_name;
+                restApiUrl = "http://botchaapis.appspot.com/getchannels?userId=" + userId + "&userTag=" + userTag + "&lat=" + loc.getLatitude() + "&long=" + loc.getLongitude();
+                //"http://botchaapis.appspot.com/getchannels?userId=186345694&userTag=Gaurav&lat=17.429549&long=78.3411581";
                 //"http://botchaapis.appspot.com/getchannels?userId=1&lat="+loc.getLatitude()+"&long="+loc.getLongitude();
                 final AsyncTask<Void, Void, List<Channel>> execute;
                 execute = new HttpRequestTask().execute();
@@ -152,6 +161,7 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 Toast.makeText(getApplicationContext(), "Changed. UserId: " + userId + ", Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude(), Toast.LENGTH_SHORT).show();
+
                 sendBroadcast(intent);
             }
         }
@@ -192,7 +202,46 @@ public class LocationService extends Service {
         protected void onPostExecute(List<Channel> channels) {
             if (channels == null || channels.size() == 0)
                 return;
-            Toast.makeText(getApplicationContext(), "Id: " + channels.get(0).getChannelTag(), Toast.LENGTH_SHORT).show();
+            else {
+                MessagesController.getInstance().channelIds.clear();
+                MessagesController.getInstance().channelTags.clear();
+                for (int i = 0; i < channels.size(); i++) {
+                    MessagesController.getInstance().channelIds.add(channels.get(i).getChannelID());
+                    MessagesController.getInstance().channelTags.add(channels.get(i).getChannelTag());
+                }
+                showScreenNotification();
+            }
+            //Toast.makeText(getApplicationContext(), "Id: " + channels.get(0).getChannelTag(), Toast.LENGTH_SHORT).show();
+        }
+
+        public void showScreenNotification() {
+            if (MessagesController.getInstance().channelTags.size() != 0) {
+                StringBuffer channelNamesBuffer = new StringBuffer();
+                for (int i = 0; i < MessagesController.getInstance().channelTags.size(); i++) {
+                    channelNamesBuffer.append(MessagesController.getInstance().channelTags.get(i));
+                }
+                String channelNames = channelNamesBuffer.toString();
+                NotificationCompat.Builder mBuilder;
+                Intent localIntent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
+                localIntent.setFlags(32768);
+                PendingIntent contentIntent = PendingIntent.getActivity(ApplicationLoader.applicationContext, 0, localIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder = new NotificationCompat.Builder(ApplicationLoader.applicationContext)
+                        .setContentTitle("New channels found")
+                        .setSmallIcon(R.drawable.notification)
+                        .setAutoCancel(true)
+                        .setNumber(1)
+                        .setContentIntent(contentIntent)
+                        .setGroup("messages")
+                        .setGroupSummary(true)
+                        .setColor(0xff2ca5e0);
+                mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+                mBuilder.setCategory(NotificationCompat.CATEGORY_MESSAGE);
+                mBuilder.setContentText("New channels available: " + channelNames);
+                mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, AudioManager.STREAM_NOTIFICATION);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ApplicationLoader.applicationContext);
+                notificationManager.notify(1, mBuilder.build());
+                MessagesController.getInstance().isNewChannelsAvailable = true;
+            }
         }
 
     }

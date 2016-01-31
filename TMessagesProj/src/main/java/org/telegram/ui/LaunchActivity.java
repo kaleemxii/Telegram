@@ -47,7 +47,6 @@ import android.widget.Toast;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import org.telegram.messenger.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -83,6 +82,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 
+import BotchaHelper.Helpers;
 import DataSchema.Greeting;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, DialogsActivity.MessagesActivityDelegate {
@@ -475,6 +475,62 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                 }
             }
         });
+
+        if (MessagesController.getInstance().isNewChannelsAvailable == true) {
+
+            MessagesController.getInstance().isNewChannelsAvailable = false;
+            createChannelDialog();
+        }
+    }
+
+    public void createChannelDialog() {
+        if (MessagesController.getInstance().channelTags.size() != 0) {
+            final ArrayList<Integer> mSelectedItems = new ArrayList();  // Where we track the selected items
+            AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+            String[] channelTagNames = new String[MessagesController.getInstance().channelTags.size()];
+            boolean[] isChannelSelected = new boolean[MessagesController.getInstance().channelIds.size()];
+            for (int i = 0; i < MessagesController.getInstance().channelTags.size(); i++) {
+                channelTagNames[i] = MessagesController.getInstance().channelTags.get(i);
+                String channelfullId = MessagesController.getInstance().channelIds.get(i);
+                String channelIdString = channelfullId.substring(0, channelfullId.indexOf(':'));
+                Long channelId = Long.parseLong(channelIdString);
+                isChannelSelected[i] = Helpers.isChannelAllowed(channelId);
+            }
+            // Set the dialog title
+            builder.setTitle("Channels Available")
+                    // Specify the list array, the items to be selected by default (null for none),
+                    // and the listener through which to receive callbacks when items are selected
+                    .setMultiChoiceItems(channelTagNames, isChannelSelected,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which,
+                                                    boolean isChecked) {
+                                    if (isChecked) {
+                                        // If the user checked the item, add it to the selected items
+                                        mSelectedItems.add(which);
+
+                                    } else if (mSelectedItems.contains(which)) {
+                                        // Else, if the item is already in the array, remove it
+                                        mSelectedItems.remove(Integer.valueOf(which));
+                                    }
+                                }
+                            })
+                            // Set the action buttons
+                    .setPositiveButton("Join", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+            builder.create().show();
+        }
     }
 
     private void showPasscodeActivity() {
@@ -2112,6 +2168,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         drawerLayoutAdapter.notifyDataSetChanged();
     }
 
+    public void launchLocationService() {
+        startService(new Intent(getBaseContext(), LocationService.class));
+    }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, Greeting> {
         @Override
@@ -2137,9 +2196,5 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             // to display in text views, just make them and put the info in them
         }
 
-    }
-
-    public void launchLocationService() {
-        startService(new Intent(getBaseContext(), LocationService.class));
     }
 }

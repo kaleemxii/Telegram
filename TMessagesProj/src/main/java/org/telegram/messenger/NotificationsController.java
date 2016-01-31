@@ -48,6 +48,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import BotchaHelper.Helpers;
+
 public class NotificationsController {
 
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
@@ -87,9 +89,10 @@ public class NotificationsController {
     public WidgetUpdateDelegate widgetUpdateDelegate = null;
     public Context context = null;
     public int[] appWidgetIds = null;
+    public AppWidgetManager appWidgetManager;
 
     public interface WidgetUpdateDelegate {
-        public void updateWidget(Context context, int[] appWidgetIds);
+        public void updateWidget(Context context, int[] appWidgetIds, AppWidgetManager appWidgetManager);
     }
 
     public NotificationsController() {
@@ -148,11 +151,12 @@ public class NotificationsController {
         return localInstance;
     }
 
-    public void setUpdateWidgetDelegate(Context context, WidgetUpdateDelegate widgetDelegate, int[] appWidgetIds) {
+    public void setUpdateWidgetDelegate(Context context, WidgetUpdateDelegate widgetDelegate, int[] appWidgetIds, AppWidgetManager appWidgetManager) {
         if (appWidgetIds != null) {
             this.context = context;
             this.widgetUpdateDelegate = widgetDelegate;
             this.appWidgetIds = appWidgetIds;
+            this.appWidgetManager = appWidgetManager;
         }
     }
 
@@ -439,6 +443,15 @@ public class NotificationsController {
             return;
         }
 
+        for (int i= messageObjects.size() - 1; i >= 0; i--) {
+            MessageObject messageObject = messageObjects.get(i);
+            long id = messageObject.getDialogId();
+            if (!Helpers.isChannelAllowed(id)) {
+                messageObjects.remove(i);
+                Log.i("Botcha", "hiding the irrelevant messages");
+            }
+        }
+
         updateMyWidget();
 
         final ArrayList<MessageObject> popupArray = new ArrayList<>(popupMessages);
@@ -451,7 +464,6 @@ public class NotificationsController {
                 HashMap<Long, Boolean> settingsCache = new HashMap<>();
                 SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", Context.MODE_PRIVATE);
                 int popup = 0;
-
                 for (int a = 0; a < messageObjects.size(); a++) {
                     MessageObject messageObject = messageObjects.get(a);
                     Log.i("Botcha messages received:", messageObject.messageText.toString());
@@ -1157,7 +1169,7 @@ public class NotificationsController {
         //ComponentName componentName = new ComponentName(ApplicationLoader.applicationContext, TelegramMessageWidget.class);
         //appWidgetManager.updateAppWidget(componentName, );
         if (widgetUpdateDelegate != null && appWidgetIds != null)
-            widgetUpdateDelegate.updateWidget(context, appWidgetIds);
+            widgetUpdateDelegate.updateWidget(context, appWidgetIds, appWidgetManager);
     }
 
     private void showOrUpdateNotification(boolean notifyAboutLast, boolean isButtonRequired, String leftBtnName, String rightBtnName) {

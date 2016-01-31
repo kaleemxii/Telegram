@@ -11,13 +11,24 @@ public class Channel {
     public User admin;
     public String channelID;
     public String channelTag;
-    private transient HashMap<Integer, User> usersById;
+    public String summary;
+
+    public Channel() {
+
+    }
 
     public Channel(Geofence geofence, User admin, String channelID) {
         this.geofence = geofence;
         this.admin = admin;
         this.channelID = channelID;
-        usersById = new HashMap<>();
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public User getAdmin() {
@@ -52,15 +63,4 @@ public class Channel {
         this.channelTag = channelTag;
     }
 
-    public Collection<User> getUsers() {
-        return usersById.values();
-    }
-
-    public void addUser(User user) {
-        usersById.put(user.userId, user);
-    }
-
-    public void removeUser(String userId) {
-        usersById.remove(userId);
-    }
 }

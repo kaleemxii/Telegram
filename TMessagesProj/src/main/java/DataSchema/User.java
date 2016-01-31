@@ -7,6 +7,10 @@ public class User {
     public int userId;
     public String userTag;
 
+    public User() {
+
+    }
+
     public User(int userId, String userTag) {
         this.userId = userId;
         this.userTag = userTag;

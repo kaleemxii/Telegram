@@ -1,10 +1,18 @@
 package BotchaHelper;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.messenger.ApplicationLoader;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import DataSchema.Greeting;
 import DataSchema.Response;
@@ -71,5 +79,128 @@ public class Helpers {
         }
 
         return "Empty";
+    }
+
+    public static boolean isChannelAllowed(long id) {
+        List<Long> allowedIDs = getAllowedIDs();
+        boolean flag1 = false;
+        boolean flag2 = false;
+        for(int i = 0; i <allowedIDs.size(); i++) {
+            if (id == allowedIDs.get(i)) {
+                flag1 = true;
+            }
+        }
+
+        List<Long> allowedIDs2 = getAllowedIDsGeoSpatial();
+        for(int i = 0; i <allowedIDs2.size(); i++) {
+            if (id == allowedIDs2.get(i)) {
+                flag2 = true;
+            }
+        }
+
+        return flag1 && flag2;
+        //return id == 135483832 || id == 171135579 || id == 149007104 || id == 192493113 || id == 175641240;
+    }
+
+    public static boolean isChannelRegistered(long channelID) {
+        List<Long> allowedIDs = getAllowedIDs();
+        boolean flag1 = false;
+        for(int i = 0; i <allowedIDs.size(); i++) {
+            if (channelID == allowedIDs.get(i)) {
+                flag1 = true;
+            }
+        }
+
+        return flag1;
+    }
+
+    public static List<Long> getAllowedIDs() {
+        List<Long> returnList = new ArrayList<Long>();
+        /*
+        saveToSharedPreference(135483832L);
+        saveToSharedPreference(171135579L);
+        saveToSharedPreference(149007104L);
+        saveToSharedPreference(192493113L);
+        saveToSharedPreference(175641240L);
+        */
+        /*returnList.add(135483832L);
+        returnList.add(171135579L);
+        returnList.add(149007104L);
+        returnList.add(192493113L);
+        returnList.add(175641240L);*/
+        SharedPreferences sharedPref = ApplicationLoader.applicationContext.getSharedPreferences("Notifications",(Context.MODE_PRIVATE));
+        String ids = sharedPref.getString("registeredIDs", "");
+        if(ids.equals("")) {
+            saveToRegisteredChannels(135483832L);
+            saveToRegisteredChannels(171135579L);
+        }
+        ids = sharedPref.getString("registeredIDs", "");
+        String array[] = ids.split(",");
+        for (String anArray : array) {
+            if (!anArray.equals("")) {
+                returnList.add(Long.parseLong(anArray, 10));
+            }
+        }
+        return returnList;
+    }
+
+
+    public static List<Long> getAllowedIDsGeoSpatial() {
+        List<Long> returnList = new ArrayList<Long>();
+        SharedPreferences sharedPref = ApplicationLoader.applicationContext.getSharedPreferences("Notifications",(Context.MODE_PRIVATE));
+        String ids = sharedPref.getString("geoAllowed2", "");
+        if(ids.equals("")) {
+            List<Long> tempList = new ArrayList<Long>();
+            tempList.add(135483832L);
+            tempList.add(171135579L);
+            tempList.add(149007104L);
+            tempList.add(192493113L);
+            tempList.add(175641240L);
+            updateGeoAllowedChannels(tempList);
+        }
+        ids = sharedPref.getString("geoAllowed2", "");
+        Log.i("Botcha debug second", ids);
+        String array[] = ids.split(",");
+        for (String anArray : array) {
+            if (!anArray.equals("")) {
+                returnList.add(Long.parseLong(anArray, 10));
+            }
+        }
+        return returnList;
+    }
+
+
+    public static void saveToRegisteredChannels(long id) {
+        SharedPreferences sharedPref = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", (Context.MODE_PRIVATE));
+        String ids = sharedPref.getString("registeredIDs", "");
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if (ids.equals("")) {
+            editor.putString("registeredIDs", Long.toString(id));
+            editor.commit();
+        } else {
+            editor.putString("registeredIDs", ids + "," + Long.toString(id));
+            editor.commit();
+        }
+    }
+
+    public static void removeFromRegisteredChannels(long id) {
+        SharedPreferences sharedPref = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", (Context.MODE_PRIVATE));
+        String ids = sharedPref.getString("registeredIDs", "");
+        SharedPreferences.Editor editor = sharedPref.edit();
+        String result = ids.replaceAll(Long.toString(id), "");
+        editor.putString("registeredIDs",result);
+        editor.commit();
+    }
+
+    public static void updateGeoAllowedChannels(List<Long> ids) {
+        SharedPreferences sharedPref = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", (Context.MODE_PRIVATE));
+        SharedPreferences.Editor editor = sharedPref.edit();
+        String result="";
+        for (int i= 0; i< ids.size(); i++) {
+            result = result + ids.get(i).toString() + ",";
+        }
+        editor.putString("geoAllowed2",result);
+        Log.i("Botcha debug", result);
+        editor.commit();
     }
 }
