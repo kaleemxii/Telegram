@@ -1,33 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin" android:background="#44000000">
-   <!-- <LinearLayout
-        android:id="@+id/widgetSearchLayout"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+    <TextView
+        android:textSize="20sp"
         android:layout_width="match_parent"
+        android:id="@+id/heading"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="#ff54759e"
+        android:textColor="@android:color/white"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Botcha"/>
 
-    <EditText
-        android:id="@+id/widgetSearchBox"
-        android:hint="@string/ask_bot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/widgetSearchSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ask_bot"
-        />
-    </LinearLayout> -->
-    <!--android:layout_below="@id/widgetSearchLayout" -->
    <ListView
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:smoothScrollbar="true"
         android:id="@+id/widgetListView"
-        android:layout_centerHorizontal="true"
         />
 
-</RelativeLayout>
+</LinearLayout>

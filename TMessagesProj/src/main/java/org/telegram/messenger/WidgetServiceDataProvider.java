@@ -59,7 +59,7 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
     @Override
     public RemoteViews getViewAt(int position) {
         String packageName = context.getPackageName();
-        RemoteViews remoteView = new RemoteViews(packageName, android.R.layout.two_line_list_item);
+        RemoteViews remoteView = new RemoteViews(packageName, R.layout.widge_list_item);
         TLRPC.Dialog currentDialog = getDialogs().get(position);
         int lowerId = (int)currentDialog.id;
         Intent fillIntent = new Intent();

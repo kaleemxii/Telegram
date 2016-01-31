@@ -66,7 +66,8 @@ public class Helpers {
     }
 
     private static String giveChannelWithToken(long id) {
-        if (id == 135483832) {
+        return Long.toString(id);
+        /*if (id == 135483832) {
             return "135483832:AAFMWMgaqIJbe0BAWjZcVxnIDKBAfrpLp9E";
         } else if (id == 171135579) {
             return "171135579:AAE4e1xWLomYb5wG3Bp69TVFue2I1fFeoVE";
@@ -78,7 +79,7 @@ public class Helpers {
             return "175641240:AAGayLEwIXjVDI1qWTb6lRUucFSGtZOMWDQ";
         }
 
-        return "Empty";
+        return "Empty";*/
     }
 
     public static boolean isChannelAllowed(long id) {
