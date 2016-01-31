@@ -9,12 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.NotificationsController;
 import org.telegram.messenger.R;
 import org.telegram.messenger.WidgetService;
+import org.telegram.tgnet.TLRPC;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,6 +77,13 @@ public class TelegramMessageWidget extends AppWidgetProvider {
         views.setPendingIntentTemplate(R.id.widgetListView, contentIntent);
         views.setRemoteAdapter(R.id.widgetListView, svcIntent);
 
+        Intent fillIntent = new Intent(context, LaunchActivity.class);
+        fillIntent.setAction("com.tmessages.openchat" + Math.random() + Integer.MAX_VALUE);
+        fillIntent.setFlags(32768);
+        TLRPC.User user = MessagesController.getInstance().getUser(192493113);
+        fillIntent.putExtra("userId", user.id);
+        PendingIntent imageButtonIntent = PendingIntent.getActivity(context, 0, fillIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.image_widget, imageButtonIntent);
         Log.d("Widget", "updateAppWidget");
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

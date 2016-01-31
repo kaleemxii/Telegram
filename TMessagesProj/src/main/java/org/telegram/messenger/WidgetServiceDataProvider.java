@@ -36,6 +36,7 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
         dialog.id = 192493113L;
         ArrayList<TLRPC.Dialog> newDialog = MessagesController.getInstance().dialogs;
         if (newDialog.get(newDialog.size() - 1).id != dialog.id ) {
+            Log.i("Botcha debug", "adding dialog here");
             newDialog.add(dialog);
         }
         return newDialog;
@@ -73,10 +74,11 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
         fillIntent.setFlags(32768);
 
         if (lowerId == 192493113L) {
+            Log.i("Botcha debug", "adding dialog here");
             remoteView.setTextViewText(android.R.id.text1, "Botcha!");
-            TLRPC.Chat chat = MessagesController.getInstance().getChat(lowerId);
+            TLRPC.User user = MessagesController.getInstance().getUser(lowerId);
             remoteView.setTextViewText(android.R.id.text2, "I am here to help. Ask me something?");
-            fillIntent.putExtra("chatId", chat.id);
+            fillIntent.putExtra("userId", user.id);
         } else {
             if (lowerId < 0) {
                 TLRPC.Chat chat = MessagesController.getInstance().getChat(-lowerId);
