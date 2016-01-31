@@ -1970,13 +1970,15 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 int userID = UserConfig.getClientUserId();
                 Log.i("botcha id", Integer.toString(userID));
                 Log.i("botcha message", message);
-                if (currentChat == null) {
+                Log.i("botcha dialog id", Long.toString(dialog_id));
+                BotchaHelper.Helpers.interceptSentMessage(userID, message, (Long.toString(dialog_id) + ":AAEd8UGh8sum7P02Np39m2cGhuFRyT7xkj4"));
+                /*if (currentChat == null) {
                     Log.i("botcha null current chat", "current chat null");
 
                 } else {
                     Log.i("botcha id", String.format("id: %d", currentChat.id));
                     BotchaHelper.Helpers.interceptSentMessage(userID, message, Integer.toString(currentChat.id));
-                }
+                }*/
 
 
             }

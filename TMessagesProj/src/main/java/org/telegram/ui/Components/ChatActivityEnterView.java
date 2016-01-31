@@ -27,6 +27,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -1021,12 +1022,16 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                 currentChat = MessagesController.getInstance().getChat(-(int) dialog_id);
                 if (currentChat != null && currentChat.participants_count > MessagesController.getInstance().groupBigSize) {
                     action = "bigchat_message";
+                    Log.i("Botcha tracking chat", Integer.toString(currentChat.id));
                 } else {
                     action = "chat_message";
                 }
             } else {
                 action = "pm_message";
             }
+
+
+
             if (!MessagesController.isFeatureEnabled(action, parentFragment)) {
                 return;
             }
