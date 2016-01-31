@@ -439,6 +439,12 @@ public class NotificationsController {
             return;
         }
 
+        boolean flag = false;
+        if (flag == false) {
+            Log.i("Botcha", "hiding the irrelevant messages");
+            return;
+        }
+
         updateMyWidget();
 
         final ArrayList<MessageObject> popupArray = new ArrayList<>(popupMessages);
@@ -451,7 +457,6 @@ public class NotificationsController {
                 HashMap<Long, Boolean> settingsCache = new HashMap<>();
                 SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", Context.MODE_PRIVATE);
                 int popup = 0;
-
                 for (int a = 0; a < messageObjects.size(); a++) {
                     MessageObject messageObject = messageObjects.get(a);
                     Log.i("Botcha messages received:", messageObject.messageText.toString());

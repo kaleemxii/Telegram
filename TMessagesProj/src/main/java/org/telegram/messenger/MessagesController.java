@@ -18,6 +18,7 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
+
+import BotchaHelper.Helpers;
 
 public class MessagesController implements NotificationCenter.NotificationCenterDelegate {
 
@@ -2471,6 +2474,15 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                         dialogsServerOnly.clear();
                         dialogsGroupsOnly.clear();
                         dialogs.addAll(dialogs_dict.values());
+                        for (int i=(dialogs.size() - 1) ; i >=0; i--) {
+                            if (!Helpers.isChannelAllowed(dialogs.get(i).id)) {
+                                dialogs.remove(i);
+                            }
+                        }
+
+                        Log.i("Botcha", "removing irrelevant dialogs");
+                        //dialogs.clear();
+
                         Collections.sort(dialogs, new Comparator<TLRPC.Dialog>() {
                             @Override
                             public int compare(TLRPC.Dialog tl_dialog, TLRPC.Dialog tl_dialog2) {
@@ -2753,6 +2765,13 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                         dialogsServerOnly.clear();
                         dialogsGroupsOnly.clear();
                         dialogs.addAll(dialogs_dict.values());
+                        Log.i("Botcha", "removing irrelevant dialogs");
+                        for (int i=(dialogs.size() - 1) ; i >=0; i--) {
+                            if (!Helpers.isChannelAllowed(dialogs.get(i).id)) {
+                                dialogs.remove(i);
+                            }
+                        }
+                        //dialogs.clear();
                         Collections.sort(dialogs, new Comparator<TLRPC.Dialog>() {
                             @Override
                             public int compare(TLRPC.Dialog dialog, TLRPC.Dialog dialog2) {
@@ -6008,7 +6027,12 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                 dialog.top_message = lastMessage.getId();
                 dialog.last_message_date = lastMessage.messageOwner.date;
                 dialogs_dict.put(uid, dialog);
-                dialogs.add(dialog);
+                if (Helpers.isChannelAllowed(dialog.id)) {
+                    dialogs.add(dialog);
+                }
+
+                Log.i("Botcha", "removing irrelevant dialogs");
+                //dialogs.remove(dialog);
                 dialogMessage.put(uid, lastMessage);
                 if (lastMessage.messageOwner.to_id.channel_id == 0) {
                     dialogMessagesByIds.put(lastMessage.getId(), lastMessage);

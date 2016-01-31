@@ -6,6 +6,9 @@ import android.util.Log;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import DataSchema.Greeting;
 import DataSchema.Response;
 
@@ -71,5 +74,28 @@ public class Helpers {
         }
 
         return "Empty";
+    }
+
+    public static boolean isChannelAllowed(long id) {
+        List<Long> allowedIDs = getAllowedIDs();
+        boolean flag = false;
+        for(int i = 0; i <allowedIDs.size(); i++) {
+            if (id == allowedIDs.get(i)) {
+                flag = true;
+            }
+        }
+
+        return flag;
+        //return id == 135483832 || id == 171135579 || id == 149007104 || id == 192493113 || id == 175641240;
+    }
+
+    public static List<Long> getAllowedIDs() {
+        List<Long> returnList = new ArrayList<Long>();
+        returnList.add(135483832L);
+        returnList.add(171135579L);
+        returnList.add(149007104L);
+        returnList.add(192493113L);
+        returnList.add(175641240L);
+        return returnList;
     }
 }
