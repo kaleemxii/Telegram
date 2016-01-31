@@ -12,6 +12,7 @@ public class Channel {
     public String channelID;
     public String channelTag;
     private transient HashMap<Integer, User> usersById;
+    public String summary;
 
     public Channel(Geofence geofence, User admin, String channelID) {
         this.geofence = geofence;
@@ -50,6 +51,14 @@ public class Channel {
 
     public void setChannelTag(String channelTag) {
         this.channelTag = channelTag;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Collection<User> getUsers() {
