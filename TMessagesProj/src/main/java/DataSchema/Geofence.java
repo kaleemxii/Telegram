@@ -8,6 +8,10 @@ public class Geofence {
     public List<GeoCoordinates> coordinates;
     private transient double[] constant, multiple;
 
+    public Geofence() {
+
+    }
+
     public Geofence(GeoCoordinates leftBottom, GeoCoordinates rightBottom, GeoCoordinates leftTop, GeoCoordinates rightTop) {
         coordinates = new ArrayList<>();
 

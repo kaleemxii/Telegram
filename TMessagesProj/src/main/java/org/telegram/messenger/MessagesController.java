@@ -81,6 +81,8 @@ public class MessagesController implements NotificationCenter.NotificationCenter
     public boolean isNewChannelsAvailable = false;
     public boolean loadingBlockedUsers = false;
     public ArrayList<Integer> blockedUsers = new ArrayList<>();
+    public ArrayList<String> channelIds = new ArrayList<>();
+    public ArrayList<String> channelTags = new ArrayList<>();
     public boolean loadingDialogs = false;
     public boolean dialogsEndReached = false;
     public boolean gettingDifference = false;
