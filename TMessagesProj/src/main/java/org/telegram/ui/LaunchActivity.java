@@ -492,8 +492,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             for (int i = 0; i < MessagesController.getInstance().channelTags.size(); i++) {
                 channelTagNames[i] = MessagesController.getInstance().channelTags.get(i);
                 String channelfullId = MessagesController.getInstance().channelIds.get(i);
-                String channelIdString = channelfullId.substring(0, channelfullId.indexOf(':'));
-                channelIds[i] = Long.parseLong(channelIdString);
+                channelIds[i] = Long.parseLong(channelfullId);
                 isChannelSelected[i] = Helpers.isChannelAllowed(channelIds[i]);
                 if (isChannelSelected[i]) {
                     mSelectedItems.add(i);
