@@ -199,7 +199,8 @@ public class ContactsController {
     }
 
     public String getInviteText() {
-        return inviteText != null ? inviteText : LocaleController.getString("InviteText", R.string.InviteText);
+        return "Hey, get hyperlocal info quickly using Botcha!. Contact botcha@microsoft.com for more info.";
+        //return inviteText != null ? inviteText : LocaleController.getString("InviteText", R.string.InviteText);
     }
 
     public void checkAppAccount() {
