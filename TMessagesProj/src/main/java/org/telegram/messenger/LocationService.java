@@ -69,8 +69,8 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 5, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 5, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 5, listener);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 5, listener);
     }
 
     @Override
@@ -81,6 +81,7 @@ public class LocationService extends Service {
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
             // A new location is always better than no location
+            previousBestLocation = location;
             return true;
         }
 
@@ -90,11 +91,12 @@ public class LocationService extends Service {
         boolean isSignificantlyOlder = timeDelta < -HALF_MINUTE;
         boolean isNewer = timeDelta > 0;
 
-        // If it's been more than one minute since the current location, use the new location
+        // If it's been more than half minute since the current location, use the new location
         // because the user has likely moved
         if (isSignificantlyNewer) {
+            previousBestLocation = location;
             return true;
-            // If the new location is more than two minutes older, it must be worse
+            // If the new location is more than half minutes older, it must be worse
         } else if (isSignificantlyOlder) {
             return false;
         }
@@ -111,12 +113,13 @@ public class LocationService extends Service {
 
         // Determine location quality using a combination of timeliness and accuracy
         if (isMoreAccurate) {
+            previousBestLocation = location;
             return true;
-        } else if (isNewer && !isLessAccurate) {
-            return true;
-        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-            return true;
-        }
+        } //else if (isNewer && !isLessAccurate) {
+//            return true;
+//        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+//            return true;
+//        }
         return false;
     }
 
@@ -153,7 +156,6 @@ public class LocationService extends Service {
                 String userTag = UserConfig.getCurrentUser().first_name;
                 restApiUrl = "http://botchaapis.appspot.com/getchannels?userId=" + userId + "&userTag=" + userTag + "&lat=" + loc.getLatitude() + "&long=" + loc.getLongitude();
                 //"http://botchaapis.appspot.com/getchannels?userId=186345694&userTag=Gaurav&lat=17.429549&long=78.3411581";
-                //"http://botchaapis.appspot.com/getchannels?userId=1&lat="+loc.getLatitude()+"&long="+loc.getLongitude();
                 final AsyncTask<Void, Void, List<Channel>> execute;
                 execute = new HttpRequestTask().execute();
 
@@ -161,7 +163,6 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 Toast.makeText(getApplicationContext(), "Changed. UserId: " + userId + ", Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude(), Toast.LENGTH_SHORT).show();
-
                 sendBroadcast(intent);
             }
         }
@@ -200,8 +201,9 @@ public class LocationService extends Service {
 
         @Override
         protected void onPostExecute(List<Channel> channels) {
-            if (channels == null || channels.size() == 0)
+            if (channels == null || channels.size() == 0) {
                 return;
+            }
             else {
                 MessagesController.getInstance().channelIds.clear();
                 MessagesController.getInstance().channelTags.clear();

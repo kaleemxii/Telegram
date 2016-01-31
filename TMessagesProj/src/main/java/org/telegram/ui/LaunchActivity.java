@@ -477,7 +477,6 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         });
 
         if (MessagesController.getInstance().isNewChannelsAvailable == true) {
-
             MessagesController.getInstance().isNewChannelsAvailable = false;
             createChannelDialog();
         }
@@ -489,12 +488,16 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
             String[] channelTagNames = new String[MessagesController.getInstance().channelTags.size()];
             boolean[] isChannelSelected = new boolean[MessagesController.getInstance().channelIds.size()];
+            final Long[] channelIds = new Long[MessagesController.getInstance().channelIds.size()];
             for (int i = 0; i < MessagesController.getInstance().channelTags.size(); i++) {
                 channelTagNames[i] = MessagesController.getInstance().channelTags.get(i);
                 String channelfullId = MessagesController.getInstance().channelIds.get(i);
                 String channelIdString = channelfullId.substring(0, channelfullId.indexOf(':'));
-                Long channelId = Long.parseLong(channelIdString);
-                isChannelSelected[i] = Helpers.isChannelAllowed(channelId);
+                channelIds[i] = Long.parseLong(channelIdString);
+                isChannelSelected[i] = Helpers.isChannelAllowed(channelIds[i]);
+                if (isChannelSelected[i]) {
+                    mSelectedItems.add(i);
+                }
             }
             // Set the dialog title
             builder.setTitle("Channels Available")
@@ -506,11 +509,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                 public void onClick(DialogInterface dialog, int which,
                                                     boolean isChecked) {
                                     if (isChecked) {
-                                        // If the user checked the item, add it to the selected items
                                         mSelectedItems.add(which);
 
                                     } else if (mSelectedItems.contains(which)) {
-                                        // Else, if the item is already in the array, remove it
                                         mSelectedItems.remove(Integer.valueOf(which));
                                     }
                                 }
@@ -519,7 +520,23 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-
+                            int userId = UserConfig.getClientUserId();
+                            for (int i = 0; i < mSelectedItems.size(); i++) {
+                                if (!Helpers.isChannelRegistered(channelIds[mSelectedItems.get(i)])) {
+                                    Integer channelIntId = Integer.parseInt(channelIds[mSelectedItems.get(i)].toString());
+                                    Helpers.registerToChannel(userId, channelIntId);
+                                    Helpers.saveToRegisteredChannels(channelIds[mSelectedItems.get(i)]);
+                                }
+                            }
+                            for (int i = 0; i < channelIds.length; i++) {
+                                if (!mSelectedItems.contains(i)) {
+                                    Helpers.removeFromRegisteredChannels(channelIds[i]);
+                                }
+                            }
+                            Intent intent = getIntent();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            finish();
+                            startActivity(intent);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
