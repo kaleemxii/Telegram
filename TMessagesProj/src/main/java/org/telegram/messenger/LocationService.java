@@ -69,7 +69,7 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 5, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 5, listener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 5, listener);
     }
 
@@ -217,6 +217,7 @@ public class LocationService extends Service {
         }
 
         public void showScreenNotification() {
+
             if (MessagesController.getInstance().channelTags.size() != 0) {
                 StringBuffer channelNamesBuffer = new StringBuffer();
                 for (int i = 0; i < MessagesController.getInstance().channelTags.size(); i++) {

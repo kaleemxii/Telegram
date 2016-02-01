@@ -527,11 +527,15 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                         public void onClick(DialogInterface dialog, int id) {
                             int userId = UserConfig.getClientUserId();
                             for (int i = 0; i < mSelectedItems.size(); i++) {
-                                if (!Helpers.isChannelRegistered(channelIds[mSelectedItems.get(i)])) {
+                                /*if (!Helpers.isChannelRegistered(channelIds[mSelectedItems.get(i)])) {
                                     Integer channelIntId = Integer.parseInt(channelIds[mSelectedItems.get(i)].toString());
-                                    Helpers.registerToChannel(userId, channelIntId);
-                                    Helpers.saveToRegisteredChannels(channelIds[mSelectedItems.get(i)]);
-                                }
+
+
+                                }*/
+
+                                Integer channelIntId = Integer.parseInt(channelIds[mSelectedItems.get(i)].toString());
+                                Helpers.registerToChannel(userId, channelIntId);
+                                Helpers.saveToRegisteredChannels(channelIds[mSelectedItems.get(i)]);
                             }
                             for (int i = 0; i < channelIds.length; i++) {
                                 if (!mSelectedItems.contains(i)) {
