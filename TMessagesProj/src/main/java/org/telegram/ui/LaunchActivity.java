@@ -295,19 +295,21 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 2) {
-                    if (!MessagesController.isFeatureEnabled("chat_create", actionBarLayout.fragmentsStack.get(actionBarLayout.fragmentsStack.size() - 1))) {
+
+                    /*if (!MessagesController.isFeatureEnabled("chat_create", actionBarLayout.fragmentsStack.get(actionBarLayout.fragmentsStack.size() - 1))) {
                         return;
                     }
                     presentFragment(new GroupCreateActivity());
-                    drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 3) {
+                    drawerLayoutContainer.closeDrawer(false);*/
+                    createChannelDialog();
+                }/* else if (position == 3) {
                     Bundle args = new Bundle();
                     args.putBoolean("onlyUsers", true);
                     args.putBoolean("destroyAfterSelect", true);
                     args.putBoolean("createSecretChat", true);
                     presentFragment(new ContactsActivity(args));
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 4) {
+                } */else if (position == 3) {
                     if (!MessagesController.isFeatureEnabled("broadcast_create", actionBarLayout.fragmentsStack.get(actionBarLayout.fragmentsStack.size() - 1))) {
                         return;
                     }
@@ -321,10 +323,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                         preferences.edit().putBoolean("channel_intro", true).commit();
                     }
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 6) {
+                } /* else if (position == 6) {
                     presentFragment(new ContactsActivity(null));
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 7) {
+                } */else if (position == 4) {
                     try {
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
@@ -334,10 +336,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                         FileLog.e("tmessages", e);
                     }
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 8) {
+                } else if (position == 6) {
                     presentFragment(new SettingsActivity());
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 9) {
+                } else if (position == 7) {
                     try {
                         Intent pickIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(LocaleController.getString("TelegramFaqUrl", R.string.TelegramFaqUrl)));
                         startActivityForResult(pickIntent, 500);
