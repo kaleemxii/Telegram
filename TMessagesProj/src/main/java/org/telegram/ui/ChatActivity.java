@@ -5470,7 +5470,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (currentUser.bot) {
                     bottomOverlayChatText.setText(LocaleController.getString("BotUnblock", R.string.BotUnblock));
                     //botcha send /start
-                    bottomOverlayChat.callOnClick();
+                    //bottomOverlayChat.callOnClick();
                 } else {
                     bottomOverlayChatText.setText(LocaleController.getString("Unblock", R.string.Unblock));
                 }
@@ -5491,7 +5491,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     AndroidUtilities.hideKeyboard(getParentActivity().getCurrentFocus());
                 }
                 //botcha send /start
-                bottomOverlayChat.callOnClick();
+                //bottomOverlayChat.callOnClick();
 
             } else {
                 bottomOverlayChatText.setText(LocaleController.getString("DeleteThisChat", R.string.DeleteThisChat));

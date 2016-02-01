@@ -709,7 +709,7 @@
     <string name="SendingVideo">Sending video...</string>
     <string name="CompressVideo">Compress Video</string>
     <!--bot-->
-    <string name="Bot">bot</string>
+    <string name="Bot">botcha</string>
     <string name="BotShare">Share</string>
     <string name="BotInvite">Add to group</string>
     <string name="BotSettings">Settings</string>
