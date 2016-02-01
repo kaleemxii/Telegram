@@ -35,7 +35,7 @@ public class WidgetServiceDataProvider implements RemoteViewsService.RemoteViews
         TLRPC.Dialog dialog = new TLRPC.Dialog();
         dialog.id = 192493113L;
         ArrayList<TLRPC.Dialog> newDialog = MessagesController.getInstance().dialogs;
-        if (newDialog.get(newDialog.size() - 1).id != dialog.id ) {
+        if (newDialog.size() > 0 && (newDialog.get(newDialog.size() - 1).id != dialog.id )) {
             Log.i("Botcha debug", "adding dialog here");
             newDialog.add(dialog);
         }
